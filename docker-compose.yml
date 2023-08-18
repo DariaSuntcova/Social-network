@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  postgres:
+    image: 'postgres'
+    container_name: 'postgres'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+    ports:
+      - '5432:5432'
+
+
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - '8090:8090'
+    depends_on:
+      - postgres
+
+volumes:
+  postgres-db:
+    driver: local
