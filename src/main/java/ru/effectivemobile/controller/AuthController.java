@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.effectivemobile.dto.account.ResponseWithToken;
+import ru.effectivemobile.dto.auth.AuthResponse;
 import ru.effectivemobile.dto.auth.AuthRequest;
 import ru.effectivemobile.service.AuthService;
 
@@ -18,7 +18,7 @@ public class AuthController {
     private static final Logger log = Logger.getLogger(AuthController.class);
 
     @PostMapping("/login")
-    public ResponseWithToken createAuthToken(@RequestBody AuthRequest authRequest) {
+    public AuthResponse createAuthToken(@RequestBody AuthRequest authRequest) {
         log.info("POST Request: authorization attempt for LOGIN: " + authRequest.login());
         return authService.createAuthToken(authRequest);
     }

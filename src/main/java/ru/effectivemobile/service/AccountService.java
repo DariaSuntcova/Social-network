@@ -26,7 +26,7 @@ public class AccountService {
         }
     }
 
-    public ResponseWithToken addNewUser(RegistrationRequest request) {
+    public RegisterResponse addNewUser(RegisterRequest request) {
         checkPassword(request.password(), request.passwordConfirm());
 
         Optional<User> userOptional = userRepository.findByLogin(request.login());
@@ -48,7 +48,7 @@ public class AccountService {
 
         user = userRepository.save(user);
 
-        return new ResponseWithToken(tokenUtils.generateToken(user));
+        return new RegisterResponse(user.getId(), user.getLogin(), user.getEmail());
     }
 
     public void setPassword(String login, ChangePasswordRequest changePasswordDto) {

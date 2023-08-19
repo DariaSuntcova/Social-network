@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
+
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,9 +28,8 @@ public class Post  {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
-    @NotNull
     private String title;
-    @NotNull
     private String text;
-    private byte[] image;
+    @ElementCollection
+    Set<String> imageUrlList;
 }

@@ -19,7 +19,7 @@ public class AccountController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseWithToken addNewUser(@RequestBody RegistrationRequest request) {
+    public RegisterResponse addNewUser(@RequestBody RegisterRequest request) {
         return accountService.addNewUser(request);
     }
 

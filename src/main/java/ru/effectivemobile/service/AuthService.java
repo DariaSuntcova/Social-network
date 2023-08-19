@@ -7,7 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.effectivemobile.dto.account.ResponseWithToken;
+import ru.effectivemobile.dto.auth.AuthResponse;
 import ru.effectivemobile.dto.auth.AuthRequest;
 import ru.effectivemobile.exceptions.AuthenticationException;
 import ru.effectivemobile.security.JwtTokenUtils;
@@ -20,7 +20,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private static final Logger log = Logger.getLogger(AuthService.class);
 
-    public ResponseWithToken createAuthToken(AuthRequest authRequest) {
+    public AuthResponse createAuthToken(AuthRequest authRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.login(), authRequest.password()));
         } catch (BadCredentialsException e) {
@@ -29,6 +29,6 @@ public class AuthService {
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.login());
         String token = jwtTokenUtils.generateToken(userDetails);
-        return new ResponseWithToken(token);
+        return new AuthResponse(token);
     }
 }

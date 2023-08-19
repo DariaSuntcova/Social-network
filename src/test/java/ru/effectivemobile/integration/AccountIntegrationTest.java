@@ -17,11 +17,10 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.effectivemobile.dto.account.RegistrationRequest;
-import ru.effectivemobile.dto.account.ResponseWithToken;
+import ru.effectivemobile.dto.account.RegisterResponse;
+import ru.effectivemobile.dto.account.RegisterRequest;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,7 +65,7 @@ public class AccountIntegrationTest {
 
     @Test
     void addNewUserTestValidData() throws Exception {
-        RegistrationRequest request = new RegistrationRequest(LOGIN, PASSWORD, PASSWORD, EMAIL);
+        RegisterRequest request = new RegisterRequest(LOGIN, PASSWORD, PASSWORD, EMAIL);
 
         MockHttpServletRequestBuilder requestPost = post(REGISTER_ENDPOINT)
                 .content(objectMapper.writeValueAsString(request))
@@ -76,11 +75,11 @@ public class AccountIntegrationTest {
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
-        ResponseWithToken token = objectMapper.readValue(response, ResponseWithToken.class);
+        RegisterResponse registerResponse= objectMapper.readValue(response, RegisterResponse.class);
 
-        assertNotNull(token);
-        assertNotNull(token.authToken());
-
+        assertNotNull(registerResponse.id());
+        assertEquals(registerResponse.login(), LOGIN);
+        assertEquals(registerResponse.email(), EMAIL);
     }
 
 }

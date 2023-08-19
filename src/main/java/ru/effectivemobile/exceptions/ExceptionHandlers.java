@@ -18,13 +18,23 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(InputDataException.class)
     public ResponseEntity<MsgError> inputDataExceptionHandler(InputDataException e) {
         return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ImageNotFoundException.class)
+    public ResponseEntity<MsgError> imageNotFoundExceptionHandler(ImageNotFoundException e) {
+        return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnsupportedMediaTypeException.class)
+    public ResponseEntity<MsgError> unsupportedMediaTypeExceptionHandler(UnsupportedMediaTypeException e) {
+        return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<MsgError> nullPointerExceptionHandler(NullPointerException e) {

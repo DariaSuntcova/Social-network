@@ -2,8 +2,8 @@ package ru.effectivemobile.controller;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.effectivemobile.dto.account.RegistrationRequest;
-import ru.effectivemobile.dto.account.ResponseWithToken;
+import ru.effectivemobile.dto.account.RegisterResponse;
+import ru.effectivemobile.dto.account.RegisterRequest;
 import ru.effectivemobile.service.AccountService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,10 +14,10 @@ class AccountControllerTest {
     @Test
     void testAddNewUser() {
         AccountService accountService = mock(AccountService.class);
-        when(accountService.addNewUser(Mockito.any())).thenReturn(new ResponseWithToken("token"));
+        when(accountService.addNewUser(Mockito.any())).thenReturn(new RegisterResponse(null,null,null));
         AccountController accountController = new AccountController(accountService);
-        assertEquals(new ResponseWithToken("token"), accountController
-                .addNewUser(new RegistrationRequest("Login", "Password", "Password", "jane.doe@example.org")));
+        assertEquals(new RegisterResponse(null,null,null), accountController
+                .addNewUser(new RegisterRequest("Login", "Password", "Password", "jane.doe@example.org")));
         verify(accountService).addNewUser(Mockito.any());
     }
 }
