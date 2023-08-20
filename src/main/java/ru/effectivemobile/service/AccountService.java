@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.effectivemobile.dto.account.*;
+import ru.effectivemobile.dto.account.ChangeEmailRequest;
+import ru.effectivemobile.dto.account.ChangePasswordRequest;
+import ru.effectivemobile.dto.account.RegisterRequest;
+import ru.effectivemobile.dto.account.RegisterResponse;
 import ru.effectivemobile.dto.notification.NotificationListResponse;
 import ru.effectivemobile.entity.Role;
 import ru.effectivemobile.entity.User;
 import ru.effectivemobile.exceptions.BadRequestException;
 import ru.effectivemobile.repository.UserRepository;
-import ru.effectivemobile.security.JwtTokenUtils;
 
 import java.util.Optional;
 
@@ -19,7 +21,6 @@ import java.util.Optional;
 public class AccountService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtils tokenUtils;
     private void checkPassword(String password, String passwordConfirm) {
         if (!password.equals(passwordConfirm)) {
             throw new BadRequestException("Пароли не совпадают");

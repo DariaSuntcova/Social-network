@@ -2,8 +2,8 @@ package ru.effectivemobile.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.imgscalr.Scalr;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.effectivemobile.entity.Image;
@@ -17,7 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-@Configuration
+@Service
 public class ImageUtil {
     private static final String HOST_ADDRESS = "http://localhost:8090/image/";
     private static final List<String> contentType = List.of("image/gif", "image/jpeg", "image/png", "image/bmp");

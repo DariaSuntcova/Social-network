@@ -13,7 +13,6 @@ import ru.effectivemobile.dto.account.RegisterResponse;
 import ru.effectivemobile.entity.User;
 import ru.effectivemobile.exceptions.BadRequestException;
 import ru.effectivemobile.repository.UserRepository;
-import ru.effectivemobile.security.JwtTokenUtils;
 
 import java.util.Optional;
 

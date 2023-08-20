@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Set;
@@ -18,12 +17,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "posts")
-public class Post  {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @CreatedDate
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date data;
     @ManyToOne
     @JoinColumn(name = "author_id")

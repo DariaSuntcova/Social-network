@@ -35,10 +35,22 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<MsgError> postNotFoundExceptionHandler(PostNotFoundException e) {
+        return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<MsgError> forbiddenExceptionHandler(ForbiddenException e) {
+        return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
+                HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<MsgError> nullPointerExceptionHandler(NullPointerException e) {
         return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
                 HttpStatus.BAD_REQUEST);
     }
+
 }
