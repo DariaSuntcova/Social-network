@@ -12,5 +12,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByTargetUserAndItsRead(User targetUser, boolean itsRead);
 
 
-    List<Notification> findByTargetUserByDataDesc(User user, Pageable pageable);
+    List<Notification> findByTargetUser(User user, Pageable pageable);
 }
