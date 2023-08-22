@@ -2,7 +2,7 @@ package ru.effectivemobile.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.effectivemobile.dto.DialogResponse;
+import ru.effectivemobile.dto.dialog.DialogResponse;
 import ru.effectivemobile.entity.*;
 import ru.effectivemobile.exceptions.DialogException;
 import ru.effectivemobile.repository.DialogRepository;

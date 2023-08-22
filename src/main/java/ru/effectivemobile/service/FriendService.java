@@ -92,12 +92,12 @@ public class FriendService {
         }
     }
 
-    public List<User> getAll(String login, FriendshipStatus status) {
+    public List<User> getAll(String login) {
         User user = userService.loadUserByLogin(login);
 
         List<User> listFriends = new ArrayList<>();
 
-        List<Friendship> friendshipList = friendshipRepository.findAllByMainUserAndStatus(user, status);
+        List<Friendship> friendshipList = friendshipRepository.findAllByMainUser(user);
         for (Friendship friendship : friendshipList) {
             listFriends.add(friendship.getTargetUser());
         }

@@ -53,6 +53,14 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<MsgError> badRequestExceptionHandler(BadRequestException e) {
+        return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+
+
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<MsgError> nullPointerExceptionHandler(NullPointerException e) {
         return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),

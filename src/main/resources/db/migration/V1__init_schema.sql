@@ -1,3 +1,20 @@
+create table dialog
+(
+    id             bigserial not null,
+    main_user_id   bigint unique,
+    target_user_id bigint unique,
+    primary key (id)
+);
+
+create table friendship
+(
+    id             bigserial not null,
+    main_user_id   bigint unique,
+    target_user_id bigint unique,
+    status         varchar(255) check (status in ('FRIEND', 'SUBSCRIBED')),
+    primary key (id)
+);
+
 create table images
 (
     id         bigserial not null,
@@ -10,12 +27,12 @@ create table images
 
 create table notifications
 (
+    its_read          boolean   not null,
     author_id         bigint,
-    date              timestamp(6),
+    data              timestamp(6),
     id                bigserial not null,
     target_id         bigint,
-    notification_type varchar(255) check (notification_type in ('POST', 'FRIEND_REQUEST', 'MESSAGE')),
-    read_status       varchar(255),
+    notification_type varchar(255) check (notification_type in ('FRIEND_REQUEST', 'DIALOG')),
     primary key (id)
 );
 
@@ -45,14 +62,26 @@ create table users
     primary key (id)
 );
 
-alter table if exists notifications
-    add constraint FK12cqci56d05cpmlhk708u964o foreign key (author_id) references users;
+alter table if exists dialog
+    add constraint main_user_id foreign key (main_user_id) references users;
+
+alter table if exists dialog
+    add constraint target_user_id foreign key (target_user_id) references users;
+
+alter table if exists friendship
+    add constraint main_user_id foreign key (main_user_id) references users;
+
+alter table if exists friendship
+    add constraint target_user_id foreign key (target_user_id) references users;
 
 alter table if exists notifications
-    add constraint FKbt4366w5ppe8o9qo4w6cl3bbk foreign key (target_id) references users;
+    add constraint author_id foreign key (author_id) references users;
+
+alter table if exists notifications
+    add constraint target_id foreign key (target_id) references users;
 
 alter table if exists post_image_url_list
-    add constraint FKbc95or52x5khbi11v7s01ybxh foreign key (post_id) references posts;
+    add constraint post_id foreign key (post_id) references posts;
 
 alter table if exists posts
-    add constraint FK6xvn0811tkyo3nfjk2xvqx6ns foreign key (author_id) references users
+    add constraint author_id foreign key (author_id) references users

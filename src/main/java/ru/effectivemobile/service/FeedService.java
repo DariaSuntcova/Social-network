@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.effectivemobile.dto.post.PostDTO;
-import ru.effectivemobile.entity.FriendshipStatus;
 import ru.effectivemobile.entity.User;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class FeedService {
 
     public List<PostDTO> getFeed(String login, int pageNumber, int pageSize) {
         // получаем всех на кого подписан пользователь
-        List<User> listFriends = friendService.getAll(login, FriendshipStatus.SUBSCRIBED);
+        List<User> listFriends = friendService.getAll(login);
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 

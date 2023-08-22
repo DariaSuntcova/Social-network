@@ -27,6 +27,16 @@ public class AccountService {
     }
 
     public RegisterResponse addNewUser(RegisterRequest request) {
+        if (request.login() == null ||request.login().isEmpty()) {
+            throw new BadRequestException("Логин не может быть пустым");
+        }
+        if (request.password() == null ||request.password().isEmpty()) {
+            throw new BadRequestException("Пароль не может быть пустым");
+        }
+        if (request.email() == null ||request.email().isEmpty()) {
+            throw new BadRequestException("Емейл не может быть пустым");
+        }
+
         checkPassword(request.password(), request.passwordConfirm());
 
         Optional<User> userOptional = userRepository.findByLogin(request.login());
@@ -52,17 +62,24 @@ public class AccountService {
     }
 
     public void setPassword(String login, ChangePasswordRequest changePasswordDto) {
+        if (changePasswordDto.password() == null ||changePasswordDto.password().isEmpty()) {
+            throw new BadRequestException("Пароль не может быть пустым");
+        }
         checkPassword(changePasswordDto.password(), changePasswordDto.passwordConfirm());
 
         User user = userRepository.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException("Bad credentials"));
 
-        user.setPassword(changePasswordDto.password());
+        user.setPassword(passwordEncoder.encode(changePasswordDto.password()));
         userRepository.save(user);
     }
 
 
 
     public void setEmail(String login, ChangeEmailRequest changeEmailDto) {
+        if (changeEmailDto.email() == null ||changeEmailDto.email().isEmpty()) {
+            throw new BadRequestException("Емейл не может быть пустым");
+        }
+
         User user = userRepository.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException("Bad credentials"));
 
         user.setEmail(changeEmailDto.email());

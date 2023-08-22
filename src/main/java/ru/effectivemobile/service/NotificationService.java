@@ -21,8 +21,15 @@ public class NotificationService {
     public List<NotificationsDto> getNewNotification(String login) {
         User user = userService.loadUserByLogin(login);
         boolean itsRead = false;
+
         List<Notification> notifications = notificationRepository
                 .findByTargetUserAndItsRead(user, itsRead);
+
+        notifications.forEach(notification -> {
+            notification.setItsRead(true);
+            notificationRepository.save(notification);
+        });
+
         return createListNotificationsDto(notifications);
     }
 
@@ -30,7 +37,7 @@ public class NotificationService {
         User user = userService.loadUserByLogin(login);
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        List<Notification> notifications = notificationRepository.findByTargetUserByDataDesc(user, pageable);
+        List<Notification> notifications = notificationRepository.findByTargetUser(user, pageable);
 
         return createListNotificationsDto(notifications);
     }

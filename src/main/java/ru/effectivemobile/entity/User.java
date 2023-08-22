@@ -1,7 +1,9 @@
 package ru.effectivemobile.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +23,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(unique = true)
     private String login;
-    @NonNull
     private String password;
-    @NonNull
     private String email;
     @Enumerated(EnumType.STRING)
     @Column(name = "roles")

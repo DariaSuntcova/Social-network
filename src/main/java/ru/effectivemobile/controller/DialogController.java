@@ -3,7 +3,7 @@ package ru.effectivemobile.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.effectivemobile.dto.DialogResponse;
+import ru.effectivemobile.dto.dialog.DialogResponse;
 import ru.effectivemobile.service.DialogService;
 
 import java.security.Principal;
