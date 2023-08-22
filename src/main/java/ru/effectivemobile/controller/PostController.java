@@ -25,8 +25,9 @@ public class PostController {
 
     @GetMapping
     public List<PostDTO> getAllPost(
-            Principal principal, @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            Principal principal,
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return postService.getAllPost(principal.getName(), pageNumber, pageSize);
     }
 

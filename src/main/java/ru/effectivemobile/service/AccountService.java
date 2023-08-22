@@ -8,7 +8,6 @@ import ru.effectivemobile.dto.account.ChangeEmailRequest;
 import ru.effectivemobile.dto.account.ChangePasswordRequest;
 import ru.effectivemobile.dto.account.RegisterRequest;
 import ru.effectivemobile.dto.account.RegisterResponse;
-import ru.effectivemobile.dto.notification.NotificationListResponse;
 import ru.effectivemobile.entity.Role;
 import ru.effectivemobile.entity.User;
 import ru.effectivemobile.exceptions.BadRequestException;
@@ -69,15 +68,5 @@ public class AccountService {
         user.setEmail(changeEmailDto.email());
         userRepository.save(user);
     }
-
-    public NotificationListResponse getNotification(String name) {
-        //TODO доделать
-        return null;
-    }
-
-
-
-
-
 }
 

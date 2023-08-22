@@ -57,7 +57,6 @@ class AccountServiceTest {
     }
 
     @Test
-
     void testAddNewUserValidData() {
         when(userRepository.save(Mockito.any())).thenReturn(new User());
         when(userRepository.findByEmail(Mockito.any())).thenReturn(Optional.empty());

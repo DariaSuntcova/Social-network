@@ -22,6 +22,11 @@ public class UserService implements UserDetailsService {
 
     public User loadUserByLogin(String login) throws UsernameNotFoundException {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException("Bad credentials"));
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователя с таким логином не существует"));
+    }
+
+    public User loadUserById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователя с таким id не существует"));
     }
 }

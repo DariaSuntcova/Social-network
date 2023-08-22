@@ -18,10 +18,9 @@ public class AuthController {
     private static final Logger log = Logger.getLogger(AuthController.class);
 
     @PostMapping("/login")
-    public AuthResponse createAuthToken(@RequestBody AuthRequest authRequest) {
+    public AuthResponse createAuthToken(
+            @RequestBody AuthRequest authRequest) {
         log.info("POST Request: authorization attempt for LOGIN: " + authRequest.login());
         return authService.createAuthToken(authRequest);
     }
-
-
 }

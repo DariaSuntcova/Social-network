@@ -13,4 +13,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByAuthorOrderByDataDesc(User author, Pageable pageable);
 
+    List<Post> findByAuthorInOrderByDataDesc(List<User> userList, Pageable pageable);
 }

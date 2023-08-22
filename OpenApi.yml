@@ -1,0 +1,602 @@
+openapi: 3.0.0
+info:
+  title: Social Media API
+  description: Social Media API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8090/v1'
+paths:
+  /account/register:
+    post:
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /account/password:
+    put:
+      summary: Изменение пароля пользователя
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              properties:
+                password:
+                  type: string
+                  required: true
+                passwordConfirm:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: Успешная операция
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /account/email:
+    put:
+      summary: Изменение электронной почты пользователя
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              properties:
+                email:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: Успешная операция
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/login:
+    post:
+      summary: Авторизация
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /image/{imageName}:
+    get:
+      summary: Получение изображения
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: imageName
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Удаление изображения
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: imageName
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /friends/{id}:
+    post:
+      summary: Принять/Добавить пользователя в друзья
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешная операция
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: Получить всех друзей или тех, на кого подписан
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: query
+          name: friendshipStatus
+          required: true
+          schema:
+            type: string
+            enum:
+              - FRIEND
+              - SUBSCRIBED
+        - in: query
+          name: pageNumber
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FriendsResponse'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Удалить из друзей/отписаться
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Успешная операция
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /post:
+    post:
+      summary: Добавить новый пост
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDTO'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: Тип загружаемого контента не соответствует изображению
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: Получить все свои посты
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 0
+          description: The page number to retrieve
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          description: The number of posts per page
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostDTO'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Изменить пост по ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID изменяемого поста
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDTO'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: Тип загружаемого контента не соответствует изображению
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Удалить пост по ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of the post to delete
+      responses:
+        '204':
+          description: Успешная операция
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /feed:
+    get:
+      summary: Получить ленту новостей
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            default: 0
+          description: The page number to retrieve
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          description: The number of posts per page
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostDTO'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /notification/all:
+    get:
+      summary: Получить все уведомления
+      parameters:
+        - in: query
+          name: pageNumber
+          description: The page number for pagination.
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: pageSize
+          description: The number of notifications per page.
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationsDto'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /notification:
+    get:
+      summary: Получить новые уведомления
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationsDto'
+        '401':
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+        id:
+          type: integer
+    RegisterRequest:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+        email:
+          type: string
+    RegisterResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        email:
+          type: string
+    AuthRequest:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+    AuthResponse:
+      type: object
+      properties:
+        Authorization:
+          type: string
+    FriendsResponse:
+      type: object
+      properties:
+        login:
+          type: string
+    PostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+            format: binary
+      required:
+        - title
+        - text
+    PostDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        data:
+          type: string
+          format: date
+        authorName:
+          type: string
+        title:
+          type: string
+        text:
+          type: string
+        imageUrlList:
+          type: array
+          items:
+            type: string
+    NotificationsDto:
+      type: object
+      properties:
+        authorLogin:
+          type: string
+        date:
+          type: string
+          format: date
+        notificationType:
+          $ref: '#/components/schemas/NotificationType'
+    NotificationType:
+      type: string
+      enum:
+        - TYPE_1
+        - TYPE_2
+      description: The type of notification.
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

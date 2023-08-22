@@ -47,6 +47,12 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
                 HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(FriendshipException.class)
+    public ResponseEntity<MsgError> friendshipExceptionHandler(FriendshipException e) {
+        return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),
+                HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<MsgError> nullPointerExceptionHandler(NullPointerException e) {
         return new ResponseEntity<>(new MsgError(e.getMessage(), counter.getAndIncrement()),

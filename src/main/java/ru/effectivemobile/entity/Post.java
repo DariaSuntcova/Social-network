@@ -25,11 +25,15 @@ public class Post {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date data;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+
     private String title;
+
     private String text;
+
     @ElementCollection
     Set<String> imageUrlList;
 }

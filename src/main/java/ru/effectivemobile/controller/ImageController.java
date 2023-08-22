@@ -1,5 +1,6 @@
 package ru.effectivemobile.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,16 +9,15 @@ import ru.effectivemobile.entity.Image;
 import ru.effectivemobile.service.ImageService;
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/v1/image")
+@RequiredArgsConstructor
 public class ImageController {
     private final ImageService imageService;
 
-    public ImageController(ImageService imageService) {
-        this.imageService = imageService;
-    }
-
     @GetMapping("{imageName}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {
+    public ResponseEntity<byte[]> getImage(
+            @PathVariable String imageName) {
+
         Image image = imageService.getImage(imageName);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getType()))
@@ -26,7 +26,9 @@ public class ImageController {
 
     @DeleteMapping("{imageName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteImage(@PathVariable String imageName) {
+    public void deleteImage(
+            @PathVariable String imageName) {
+
         imageService.deleteImage(imageName);
     }
 }

@@ -16,6 +16,7 @@ import ru.effectivemobile.repository.PostRepository;
 import ru.effectivemobile.util.ImageUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageUtil imageUtil;
     private final ImageService imageService;
+
 
     public PostDTO addNewPost(String login, PostRequest postRequest) {
         User user = userService.loadUserByLogin(login);
@@ -44,6 +46,7 @@ public class PostService {
                 .author(user)
                 .imageUrlList(imageUrlList)
                 .build());
+
 
         return createPostDTO(post);
     }
@@ -109,7 +112,12 @@ public class PostService {
             throw new ForbiddenException("Нельзя удалять чужие посты");
         }
         postRepository.deleteById(id);
+    }
 
+    protected List<PostDTO> createListPostDTO(List<User> userList, Pageable pageable) {
+        List<Post> postList = postRepository.findByAuthorInOrderByDataDesc(userList, pageable);
+
+        return postList.stream().map(this::createPostDTO).collect(Collectors.toList());
     }
 
     private PostDTO createPostDTO(Post post) {

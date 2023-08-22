@@ -1,12 +1,18 @@
 package ru.effectivemobile.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "notifications")
 public class Notification {
@@ -17,8 +23,8 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
-    @CreatedDate
-    private Date date;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date data;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -28,6 +34,6 @@ public class Notification {
     @JoinColumn(name = "target_id")
     private User targetUser;
 
-    @JoinColumn(name = "read_status")
-    private String readStatus;
+    @JoinColumn(name = "its_read")
+    private boolean itsRead;
 }
