@@ -31,3 +31,7 @@
 Backend запускается на порту 8090.
 
 Postgres запускается на порту 5432.
+
+    bd_name: postgres
+    username: postgres
+    password: postgres
