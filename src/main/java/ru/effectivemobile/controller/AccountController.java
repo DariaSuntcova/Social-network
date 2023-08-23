@@ -37,7 +37,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public void setPassword(
             Principal principal,
-            @RequestBody ChangeEmailRequest changeEmailDto) {
-        accountService.setEmail(principal.getName(), changeEmailDto);
+            @RequestBody ChangeEmailRequest changeEmailRequest) {
+        accountService.setEmail(principal.getName(), changeEmailRequest);
     }
 }

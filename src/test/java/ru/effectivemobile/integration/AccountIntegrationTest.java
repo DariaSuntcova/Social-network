@@ -21,10 +21,11 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.effectivemobile.dto.account.ChangeEmailRequest;
 import ru.effectivemobile.dto.account.ChangePasswordRequest;
 import ru.effectivemobile.dto.account.RegisterRequest;
 import ru.effectivemobile.dto.account.RegisterResponse;
-import ru.effectivemobile.dto.auth.AuthRequest;
+import ru.effectivemobile.repository.UserRepository;
 
 import java.util.stream.Stream;
 
@@ -65,19 +66,23 @@ public class AccountIntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
     }
 
     @AfterEach
     public void clean() {
         SecurityContextHolder.clearContext();
+        userRepository.deleteAll();
     }
 
 
     @Test
-    @Disabled
     void addNewUserTestValidData() throws Exception {
         RegisterRequest request = new RegisterRequest(LOGIN, PASSWORD, PASSWORD, EMAIL);
 
@@ -162,16 +167,13 @@ public class AccountIntegrationTest {
     }
 
     @Test
-    @Disabled
     void addNewUserTestEmailExists() throws Exception {
-        RegisterRequest request = new RegisterRequest(LOGIN, PASSWORD, PASSWORD, EMAIL);
+        addUser();
 
-        MockHttpServletRequestBuilder requestPost = post(REGISTER_ENDPOINT)
+        RegisterRequest request = new RegisterRequest("Test", PASSWORD, PASSWORD, EMAIL);
+        MockHttpServletRequestBuilder requestPost = put(PASSWORD_ENDPOINT)
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(requestPost)
-                .andExpect(status().isCreated());
 
         mockMvc.perform(requestPost)
                 .andExpect(status().isBadRequest());
@@ -181,18 +183,14 @@ public class AccountIntegrationTest {
     @Disabled
     void setPasswordTestValidData() throws Exception {
         addUser();
-        String token = getToken();
 
         ChangePasswordRequest request = new ChangePasswordRequest("newPass", "newPass");
-        MockHttpServletRequestBuilder requestPost = put(PASSWORD_ENDPOINT)
+        MockHttpServletRequestBuilder requestPut = put(PASSWORD_ENDPOINT)
                 .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HEADER_AUTH, token);
+                .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(requestPost)
+        mockMvc.perform(requestPut)
                 .andExpect(status().isOk());
-
-
     }
 
     private static void addUser() throws Exception {
@@ -205,20 +203,36 @@ public class AccountIntegrationTest {
         mockMvc.perform(requestPost);
     }
 
-    private static String getToken() throws Exception {
-        AuthRequest request = new AuthRequest(LOGIN, PASSWORD);
+    @Test
+    void checkUnauthorized() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
 
-        MockHttpServletRequestBuilder requestPost = post(AUTH_ENDPOINT)
+        RegisterRequest request = new RegisterRequest(LOGIN, PASSWORD, PASSWORD, EMAIL);
+
+        MockHttpServletRequestBuilder requestPost = post(REGISTER_ENDPOINT)
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        String authToken = mockMvc.perform(requestPost)
-                .andExpect(status().isOk())
-                .andReturn().getResponse()
-                .getContentAsString()
-                .replace("{\"auth-token\":\"", BEARER);
+        mockMvc.perform(requestPost)
+                .andExpect(status().isCreated());
 
-        return authToken.replace("\"}", "");
+        ChangePasswordRequest passwordRequest = new ChangePasswordRequest("newPass", "newPass");
+        MockHttpServletRequestBuilder requestPut = put(PASSWORD_ENDPOINT)
+                .content(objectMapper.writeValueAsString(passwordRequest))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestPut)
+                .andExpect(status().isUnauthorized());
+
+        ChangeEmailRequest emailRequest = new ChangeEmailRequest("newEmail@test.ru");
+
+        MockHttpServletRequestBuilder emailRequestPut = put(EMAIL_ENDPOINT)
+                .content(objectMapper.writeValueAsString(emailRequest))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(emailRequestPut)
+                .andExpect(status().isUnauthorized());
+
     }
 
 

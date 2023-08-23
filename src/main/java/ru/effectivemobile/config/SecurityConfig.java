@@ -54,7 +54,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
+//                .cors(Customizer.withDefaults())
 
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
@@ -83,17 +84,17 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowCredentials(true)
-                        .allowedOrigins("http://localhost:8080")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(@NonNull CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowCredentials(true)
+//                        .allowedOrigins("http://localhost:8080")
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+//                        .allowedHeaders("*");
+//            }
+//        };
+//    }
 }
